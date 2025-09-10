@@ -44,16 +44,9 @@ const Aquarium = {
 			const size = i + 16;
 			fish.style.setProperty(`--size`, `${size}vmin`);
 			if(this.blur) fish.style.setProperty(`filter`, `blur(${blur}vmin)`);
-			fish.create('div', 'top-fin');
-			fish.create('div', 'fish-body');
-			fish.create('div', 'tail-fin');
-			fish.create('div', 'side-fin');
-			fish.create('div', 'scale scale-1');
-			fish.create('div', 'scale scale-2');
-			fish.create('div', 'scale scale-3');
+			[...Array(7)].forEach(v => fish.create('div'));
 			fish.style.top = (Math.floor(Math.random() * 65) + 25).toFixed(2) + 'vh';
-			this.shuffle(fish, true);
-			return fish;
+			return this.shuffle(fish, true);
 		}));
 
 		return new Promise(res => Promise.all([
@@ -66,7 +59,7 @@ const Aquarium = {
 	shuffle: async function(fish, isDelay = false) {
 		const duration  = (Math.random() * 20) + 20.0;
 		const delay     = (0 - (Math.random() * duration)).toFixed(2);
-		const bezier    = this.randomCubicBezier({ style: 'any', yMin: 0.15, yMax: 0.65 }).css;
+		const bezier    = this.randomCubicBezier({ style: 'any', yMin: 0.15, yMax: 0.90 }).css;
 
 		fish.animate(
 			[
@@ -85,7 +78,7 @@ const Aquarium = {
 				{ offset: 1.00,  transform: `translate(var(--size))` }
 			],
 			{
-				duration: (duration * 1000),
+				duration: duration * 1000,
 				delay: isDelay ? delay * 1000 : 0,
 				iterations: 1,
 				easing: bezier,
@@ -94,6 +87,7 @@ const Aquarium = {
 
 			}
 		).finished.then(() => this.shuffle(fish));
+		return fish;
 	},
 
 
