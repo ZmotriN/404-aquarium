@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const csso = require("csso");
 
 const ROOT = process.cwd();
 const SRC = path.join(ROOT, 'src');
@@ -12,7 +13,7 @@ const stylesContent = fs.readFileSync(path.join(SRC, 'styles/styles.min.css'), '
 
 const indexContent = fs.readFileSync(path.join(SRC, 'index.html'), 'utf8')
         .replace(/<script.*?\/script>/i, `<script>${scriptContent}</script>`)
-        .replace(/<link[^>]+>/i, `<style>${stylesContent}</style>`);
+        .replace(/<link[^>]+>/i, `<style>${csso.minify(stylesContent, { restructure: false }).css}</style>`);
 
 fs.writeFileSync(path.join(DIST, '404.html'), indexContent, 'utf-8');
 
